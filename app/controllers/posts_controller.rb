@@ -1,6 +1,8 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, :only => [:create, :destroy]
 
+  skip_before_action :verify_authenticity_token
+
   def create
     @post = Post.new(post_params)
     @post.user = current_user
@@ -11,6 +13,7 @@ class PostsController < ApplicationController
     @post = current_user.posts.find(params[:id])
     @post.destroy
 
+    render :json => { :id => @post.id }
   end
 
   def index
